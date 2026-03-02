@@ -1,0 +1,50 @@
+# ── Python ──
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ──
+Thumbs.db
+.DS_Store
+
+# ── NOT Stage 1 / Stage 2 DOE ──
+# FEM meshes (Stage 3+)
+*.bdf
+
+# TACS / OpenFOAM scripts (Stage 3+)
+bridge_openfoam_tacs.py
+debug_pynastran.py
+inspect_tacs.py
+verify_tacs_mesh.py
+check_layup_signature.py
+
+# Aerostructural run scripts (Stage 3+)
+run_aerostruct.py
+run_optimization.py
+run_aerostruct_out/
+run_optimization_out/
+
+# Old/abandoned GUI attempts
+gui_explorer.py
+build_explorer.py
+
+# Misc
+RESUME.md
+setup_mdo.sh
+
+# Generated data (reproducible from code)
+data/pipeline.db
+data/doe_all_samples.csv
+data/doe_feasible_samples.csv
+data/explorer.html
+data/geometries/
+data/plots/

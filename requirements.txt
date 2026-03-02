@@ -1,0 +1,8 @@
+# MDO Lab 4 — Stage 1 & Stage 2 DOE
+# Python 3.12+
+numpy>=2.0
+scipy>=1.13
+pandas>=2.2
+openpyxl>=3.1
+matplotlib>=3.9
+AeroSandbox>=4.2
