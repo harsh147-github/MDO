@@ -43,8 +43,6 @@ setup_mdo.sh
 
 # Generated data (reproducible from code)
 data/pipeline.db
-data/doe_all_samples.csv
-data/doe_feasible_samples.csv
 data/explorer.html
 data/geometries/
 data/plots/
