@@ -28,6 +28,11 @@ stealth signatures, and stability derivatives. 6 additional variables are derive
 via calibrated K-factor formulas (K_BLEND=2.24, K_AR=2.143, K_IXX=0.00455,
 K_FUEL=0.0167). Source of truth: `config/design_space.xlsx`.
 
+https://github.com/user-attachments/assets/efb87553-c95b-4421-93bd-db9dda3e1066
+<img width="3840" height="2160" alt="newplot" src="https://github.com/user-attachments/assets/091975d6-f193-4efc-b75b-6b26beb488c6" />
+
+
+
 Key modules:
 - `pipeline/stage1_design_space.py` — bounds, derived formulas, 9 physics validation checks
 - `pipeline/design_vector.py` — DesignVector class wrapping 34-var sample into 63 grouped CAD params
@@ -42,8 +47,10 @@ Key modules:
 - `pipeline/visualise_doe.py` — 6 diagnostic PNG plots
 
 ## Interactive Explorer
+![WhatsApp Image 2026-03-02 at 2 13 47 PM](https://github.com/user-attachments/assets/d2225713-5b81-4cac-8774-80c95e7df1cf)
 
-`explorer_app.py` — local Python HTTP server serving a single-page 3D Plotly app:
+`explorer_app![Uploading WhatsApp Image 2026-03-02 at 2.13.47 PM.jpeg…]()
+.py` — local Python HTTP server serving a single-page 3D Plotly app:
 - 3D scatter plot with axis/preset/colour controls
 - Translucent feasible-region cloud (mesh3d convex hull, toggleable)
 - Live-editable spreadsheet tab — cell edits recompute derived vars, re-validate, and update the plot instantly
