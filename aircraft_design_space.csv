@@ -1,0 +1,44 @@
+﻿ID,Category,Variable Name,Python Key,Description,Lower Bound,Baseline,Upper Bound,Unit,Scale Type,Active?,Range Span,Normalised Baseline,Notes
+1,Wing Planform,Wingspan,wing_span,Tip-to-tip wingspan,28.00,35.00,45.00,m,Linear,YES,17.00,41.18%,Constrained by airport gate (ICAO Code C ≤36m)
+2,Wing Planform,Wing Area,wing_area,Reference wing area (Sref),90.00,125.00,180.00,m²,Linear,YES,90.00,38.89%,Drives wing loading
+3,Wing Planform,Aspect Ratio,wing_AR,Wingspan² / Sref,7.00,9.80,13.00,—,Linear,YES,6.00,46.67%,"Higher = less induced drag, more flex"
+4,Wing Planform,Taper Ratio,wing_taper,Tip chord / root chord,0.15,0.30,0.50,—,Linear,YES,0.35,42.86%,Affects spanwise lift distribution
+5,Wing Planform,Sweep Angle (LE),wing_sweep_LE,Leading-edge sweep,20.00,30.00,45.00,deg,Linear,YES,25.00,40.00%,Trade: Mcrit vs low-speed CLmax
+6,Wing Planform,Dihedral Angle,wing_dihedral,Wing dihedral for roll stability,2.00,5.00,8.00,deg,Linear,YES,6.00,50.00%,Swept wings need less dihedral
+7,Wing Planform,Wing Twist (root),wing_twist_root,Incidence angle at root,0.00,2.00,5.00,deg,Linear,YES,5.00,40.00%,Set for cruise CL
+8,Wing Planform,Wing Twist (tip),wing_twist_tip,Washout at tip (negative = washout),-5.00,-2.00,0.00,deg,Linear,YES,5.00,60.00%,Delays tip stall
+9,Wing Planform,Kink Location (η),wing_kink_eta,Spanwise fraction of crank/kink,0.25,0.37,0.50,—,Linear,YES,0.25,48.00%,Where trailing edge breaks for flap
+10,Wing Planform,Wing Vertical Pos,wing_z_pos,"Vertical position on fuselage (0=low, 1=high)",0.00,0.00,1.00,—,Discrete,YES,1.00,0.00%,"0=low-wing, 0.5=mid, 1=high"
+,,,,,,,,,,,,,
+11,Airfoil,Root t/c,airfoil_tc_root,Thickness-to-chord ratio at root,0.10,0.14,0.18,—,Linear,YES,0.08,50.00%,Thicker = more fuel vol & structure
+12,Airfoil,Tip t/c,airfoil_tc_tip,Thickness-to-chord ratio at tip,0.08,0.11,0.14,—,Linear,YES,0.06,50.00%,Thinner tip for aero efficiency
+13,Airfoil,Root Camber,airfoil_camber_root,Max camber as fraction of chord,0.01,0.03,0.05,—,Linear,YES,0.04,50.00%,Affects CLmax and Cm0
+14,Airfoil,Design CL,airfoil_CL_design,Target CL for airfoil shaping,0.30,0.50,0.70,—,Linear,YES,0.40,50.00%,Cruise CL target
+,,,,,,,,,,,,,
+15,Fuselage,Fuselage Length,fuse_length,Overall fuselage length,30.00,38.00,50.00,m,Linear,YES,20.00,40.00%,Driven by passenger capacity
+16,Fuselage,Fuselage Diameter,fuse_diameter,Maximum external diameter,3.00,4.00,5.50,m,Linear,YES,2.50,40.00%,Single vs twin aisle
+17,Fuselage,Nose Fineness,fuse_nose_fine,Nose length / diameter,1.00,1.60,2.50,—,Linear,YES,1.50,40.00%,Drag vs cockpit visibility
+18,Fuselage,Tail Fineness,fuse_tail_fine,Tail-cone length / diameter,2.00,3.00,4.00,—,Linear,YES,2.00,50.00%,Upsweep angle for rotation clearance
+19,Fuselage,Fuselage Upsweep,fuse_upsweep,Tail upsweep angle,4.00,8.00,14.00,deg,Linear,YES,10.00,40.00%,Clearance vs drag penalty
+,,,,,,,,,,,,,
+20,Empennage,HT Volume Coeff,HT_vol_coeff,Horizontal tail volume coefficient,0.70,1.00,1.40,—,Linear,YES,0.70,42.86%,Stability & control sizing
+21,Empennage,VT Volume Coeff,VT_vol_coeff,Vertical tail volume coefficient,0.05,0.08,0.12,—,Linear,YES,0.07,42.86%,OEI yaw control
+22,Empennage,HT Sweep,HT_sweep,Horizontal tail sweep angle,25.00,33.00,42.00,deg,Linear,YES,17.00,47.06%,Usually > wing sweep
+23,Empennage,VT Sweep,VT_sweep,Vertical tail sweep angle,30.00,40.00,50.00,deg,Linear,YES,20.00,50.00%,Structural & flutter consideration
+24,Empennage,HT Aspect Ratio,HT_AR,Horizontal tail aspect ratio,3.50,4.50,6.00,—,Linear,YES,2.50,40.00%,Lower than wing AR typically
+25,Empennage,Tail Arm Fraction,tail_arm_frac,Tail arm / fuselage length,0.40,0.50,0.60,—,Linear,YES,0.20,50.00%,Longer arm = smaller tail = less drag
+,,,,,,,,,,,,,
+26,Engine/Nacelle,Bypass Ratio,eng_BPR,Engine bypass ratio,5.00,9.00,14.00,—,Linear,YES,9.00,44.44%,"Higher BPR = better SFC, larger nacelle"
+27,Engine/Nacelle,Engine SFC (cruise),eng_SFC_cr,Specific fuel consumption at cruise,0.50,0.58,0.70,lb/lbf/hr,Linear,YES,0.20,40.00%,Key for range/fuel burn
+28,Engine/Nacelle,Nacelle Diameter,nac_diameter,Fan diameter / nacelle OD,1.40,1.80,2.40,m,Linear,YES,1.00,40.00%,Linked to BPR & thrust class
+29,Engine/Nacelle,Engine Spanwise Pos,eng_eta,Spanwise fraction of engine on wing,0.25,0.35,0.45,—,Linear,YES,0.20,50.00%,"Inboard = less flutter, more yaw moment"
+30,Engine/Nacelle,Number of Engines,n_engines,Number of engines,2,2,4,—,Discrete,YES,2.00,0.00%,2 or 4; most modern = 2
+,,,,,,,,,,,,,
+31,Mission/Weights,Design Range,design_range,Design mission range,2000,3500,6000,nmi,Linear,YES,4000.00,37.50%,Drives fuel fraction & MTOW
+32,Mission/Weights,Cruise Mach,cruise_mach,Cruise Mach number,0.72,0.78,0.85,—,Linear,YES,0.13,46.15%,Trade: speed vs wave drag
+33,Mission/Weights,Cruise Altitude,cruise_alt,Initial cruise altitude,30000,35000,42000,ft,Linear,YES,12000.00,41.67%,"Higher = less drag, engine limits"
+34,Mission/Weights,Payload,payload,Design payload mass,12000,18000,28000,kg,Linear,YES,16000.00,37.50%,Passengers + cargo
+,,,,,,,,,,,,,
+SUMMARY,,,,,,,,,,,,,
+,Total Active Variables:,34,,,,,,,,,,,
+,Total Variables Defined:,34,,,,,,,,,,,
