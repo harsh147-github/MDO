@@ -2,6 +2,7 @@
 
 Multi-disciplinary Design Optimisation pipeline for a Cooperative Combat Air Vehicle (CCAV).
 V-tail, single-engine, stealth-aligned, Mach 0.8-1.5 flight regime.
+![doe_generation](https://github.com/user-attachments/assets/bf819d90-0216-4b7e-849b-c4fad47ccce0)
 
 ## Current Status
 
