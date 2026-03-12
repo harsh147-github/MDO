@@ -1,0 +1,43 @@
+ID,Category,Variable Name,Python Key,Description,Lower Bound,Baseline,Upper Bound,Unit,Scale Type,Active
+1,Wing,Wingspan,wing_span,Tip-to-tip wingspan,8.00,11.90,16.00,m,Independent,YES
+2,Wing,Root Chord,wing_root_chord,Wing root chord length,2.50,4.50,6.50,m,Independent,YES
+3,Wing,Tip Chord,wing_tip_chord,Wing tip chord length,0.80,1.50,3.00,m,Independent,YES
+4,Wing,Sweep Angle (LE),wing_sweep_LE,Leading-edge sweep angle,25.00,35.00,55.00,deg,Independent,YES
+5,Wing,Dihedral,wing_dihedral,Wing dihedral angle,-2.00,3.00,8.00,deg,Independent,YES
+6,Wing,Twist (root),wing_twist_root,Incidence angle at root,0.00,2.00,5.00,deg,Independent,YES
+7,Wing,Twist (tip),wing_twist_tip,Washout at tip,-5.00,-2.00,0.00,deg,Independent,YES
+8,Wing,Kink Eta,wing_kink_eta,Spanwise fraction of kink,0.25,0.37,0.50,-,Independent,YES
+9,Wing,Root t/c,wing_tc_root,Root thickness-to-chord ratio,0.08,0.12,0.18,-,Independent,YES
+10,Wing,Tip t/c,wing_tc_tip,Tip thickness-to-chord ratio,0.06,0.09,0.14,-,Independent,YES
+11,Body,Body Length,body_length,Overall body length,5.00,7.90,12.00,m,Independent,YES
+12,Body,Body Width,body_width,Maximum body width,0.60,0.85,1.40,m,Independent,YES
+13,Body,Body Height,body_height,Maximum body height,0.40,0.60,1.00,m,Independent,YES
+14,Body,Nose Fineness,body_nose_fineness,Nose length / body width,1.50,2.20,3.50,-,Independent,YES
+15,Body,Tail Fineness,body_tail_fineness,Tail-cone length / body width,2.00,3.00,4.50,-,Independent,YES
+16,V-Tail,Cant Angle,vtail_cant_deg,V-tail cant angle,15.00,30.00,55.00,deg,Independent,YES
+17,V-Tail,Span Fraction,vtail_span_frac,V-tail span / wingspan,0.12,0.20,0.30,-,Independent,YES
+18,V-Tail,Root Chord Frac,vtail_root_chord_frac,V-tail root chord / wing root chord,0.25,0.40,0.55,-,Independent,YES
+19,V-Tail,Sweep,vtail_sweep,V-tail sweep angle,25.00,35.00,50.00,deg,Independent,YES
+20,V-Tail,Taper,vtail_taper,V-tail taper ratio,0.30,0.60,0.80,-,Independent,YES
+21,V-Tail,t/c,vtail_tc,V-tail thickness-to-chord,0.06,0.09,0.12,-,Independent,YES
+22,Inlet,Inlet Width,inlet_width,Inlet opening width,0.30,0.55,0.90,m,Independent,YES
+23,Inlet,Inlet Height,inlet_height,Inlet opening height,0.20,0.40,0.70,m,Independent,YES
+24,Inlet,Inlet X Fraction,inlet_x_frac,Inlet position along body (0=nose),0.15,0.25,0.40,-,Independent,YES
+25,Inlet,Inlet Shield,inlet_shield,Inlet radar shielding factor (0=none 1=full),0.00,0.50,1.00,-,Independent,YES
+26,Propulsion,Max Thrust,thrust_max,Maximum engine thrust,60.00,120.00,200.00,kN,Independent,YES
+27,Propulsion,Cruise Thrust,thrust_cruise,Cruise thrust requirement,20.00,40.00,80.00,kN,Independent,YES
+28,Propulsion,TSFC,TSFC,Thrust-specific fuel consumption,1.50e-05,2.80e-05,4.00e-05,kg/N/s,Independent,YES
+29,Mission,Cruise Mach,cruise_mach,Cruise Mach number,0.70,0.90,1.50,-,Independent,YES
+30,Mission,Design Range,design_range,Design mission range,2000.00,3700.00,6000.00,km,Independent,YES
+31,Mission,CL Cruise,CL_cruise,Cruise lift coefficient,0.30,0.60,0.90,-,Independent,YES
+32,Mission,Fuel Mass,mass_fuel_kg,Fuel mass,2000.00,4500.00,8000.00,kg,Independent,YES
+33,Mission,Payload Mass,mass_payload_kg,Payload mass,500.00,2000.00,4000.00,kg,Independent,YES
+34,Mission,Max Load Factor,n_max,Maximum load factor,3.00,5.00,9.00,g,Independent,YES
+35,Stealth,RCS Frontal,rcs_frontal,Frontal RCS target,-25.00,-10.00,-2.00,dBsm,Independent,YES
+36,Stealth,Stealth Alignment,stealth_align_deg,Planform alignment angle,5.00,15.00,30.00,deg,Independent,YES
+37,Derived,Taper Ratio,wing_taper,tip chord / root chord,,,,-,Derived,YES
+38,Derived,Wing Area,wing_area,K_BLEND * span * (root+tip)/2,,,,m²,Derived,YES
+39,Derived,Aspect Ratio,wing_AR,K_AR * span² / S_trap,,,,-,Derived,YES
+40,Derived,Inlet Area,inlet_area,inlet_width * inlet_height,,,,m²,Derived,YES
+41,Derived,Empty Mass,mass_empty_kg,Raymer-class empty weight estimate,,,,kg,Derived,YES
+42,Derived,GTOW,mass_GTOW,empty + fuel + payload,,,,kg,Derived,YES

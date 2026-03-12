@@ -46,3 +46,18 @@ data/pipeline.db
 data/explorer.html
 data/geometries/
 data/plots/
+
+# ── OpenVSP ──
+openvsp.zip
+_openvsp_extract/
+.venv_vsp/
+.vsptime
+
+# VSP batch output (large, reproducible from pipeline)
+output/vsp_batch/sample_*/
+output/*.stl
+
+# ── Claude / IDE workspace ──
+.claude/
+MDO_Lab_4.code-workspace
+data/MDO_Lab_4.code-workspace
