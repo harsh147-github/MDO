@@ -1,9 +1,9 @@
 """
-Stage 1→2 Visual Test — Design Space to DOE
+CCAV DOE Visual Test — Design Space to DOE
 =============================================
-Generates a set of diagnostic plots showing how the 28-dimensional
-design space (Stage 1) gets populated by LHS samples (Stage 2) and
-how the physics pre-filter separates feasible from infeasible designs.
+Generates a set of diagnostic plots showing how the 36-dimensional
+design space gets populated by LHS samples and how the physics
+pre-filter separates feasible from infeasible designs.
 
 Run:
     python -m pipeline.visualise_doe
@@ -22,9 +22,9 @@ from matplotlib.gridspec import GridSpec
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT))
 
-from pipeline.stage1_design_space import get_independent_bounds, get_baseline_vector
-from pipeline.stage2_doe import generate_doe
-from pipeline.design_vector import DesignVector
+from pipeline.ccav_sampler import (
+    get_independent_bounds, get_baseline_vector, generate_doe,
+)
 
 OUT_DIR = _REPO_ROOT / "data" / "plots"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -145,7 +145,7 @@ def plot_scatter_matrix(all_samples, feasible_mask):
     coloured by feasibility.
     """
     key_vars = ["wing_span", "wing_root_chord", "wing_tip_chord",
-                "mass_fuel", "mass_empty", "cruise_mach"]
+                "mass_fuel_kg", "mass_empty_kg", "cruise_mach"]
     n = len(key_vars)
 
     fig, axes = plt.subplots(n, n, figsize=(16, 14))
@@ -208,7 +208,7 @@ def plot_parallel_coordinates(all_samples, feasible_mask, bounds):
     spans[spans == 0] = 1
 
     fig, ax = plt.subplots(figsize=(18, 7))
-    fig.suptitle("PARALLEL COORDINATES — 28 Independent Variables (normalised to [0,1])",
+    fig.suptitle("PARALLEL COORDINATES — 36 Independent Variables (normalised to [0,1])",
                  fontsize=13, fontweight="bold", y=0.98)
 
     x_pos = np.arange(n_vars)
@@ -424,25 +424,19 @@ def plot_derived_landscape(all_samples, feasible_mask):
     ax.set_title("Span vs Aspect Ratio", fontsize=10)
     ax.grid(alpha=0.3)
 
-    # ── Panel 3: Fuel Mass vs Fuel Volume (the main filter) ───────
+    # ── Panel 3: Fuel Mass vs Body Length ────────────────────────
     ax = axes[2]
     if infeas:
-        fvn_i = [s.get("mass_fuel", 0) / 800.0 for s in infeas]
-        fva_i = [s.get("vol_fuel", 0) for s in infeas]
+        fvn_i = [s.get("mass_fuel_kg", 0) for s in infeas]
+        fva_i = [s.get("body_length", 0) for s in infeas]
         ax.scatter(fva_i, fvn_i, s=12, c=C_INFEAS, alpha=0.2, edgecolors="none")
     if feas:
-        fvn_f = [s.get("mass_fuel", 0) / 800.0 for s in feas]
-        fva_f = [s.get("vol_fuel", 0) for s in feas]
+        fvn_f = [s.get("mass_fuel_kg", 0) for s in feas]
+        fva_f = [s.get("body_length", 0) for s in feas]
         ax.scatter(fva_f, fvn_f, s=12, c=C_FEAS, alpha=0.5, edgecolors="none")
-    # Threshold line: need = avail * 0.6 → need/avail = 0.6
-    x_line = np.linspace(0, 12, 50)
-    ax.plot(x_line, x_line / 0.60, "--", color=C_BASE, linewidth=1.5,
-            label="Filter threshold (60%)")
-    ax.plot(x_line, x_line, ":", color="#888", linewidth=1, label="1:1 line")
-    ax.set_xlabel("Available Fuel Volume [m³]")
-    ax.set_ylabel("Required Fuel Volume [m³]")
-    ax.set_title("Fuel Volume: Available vs Required", fontsize=10)
-    ax.legend(fontsize=8)
+    ax.set_xlabel("Body Length [m]")
+    ax.set_ylabel("Fuel Mass [kg]")
+    ax.set_title("Body Length vs Fuel Mass", fontsize=10)
     ax.grid(alpha=0.3)
 
     # Common legend
@@ -470,7 +464,7 @@ def main():
     _setup_dark_style()
 
     print("=" * 60)
-    print("  VISUAL TEST — Stage 1 (Design Space) → Stage 2 (DOE)")
+    print("  VISUAL TEST — CCAV Design Space → LHS DOE")
     print("=" * 60)
 
     # Generate fresh samples

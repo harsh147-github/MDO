@@ -56,6 +56,7 @@ _openvsp_extract/
 # VSP batch output (large, reproducible from pipeline)
 output/vsp_batch/sample_*/
 output/*.stl
+output/ccav_baseline.*
 
 # ── Claude / IDE workspace ──
 .claude/

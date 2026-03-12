@@ -1,8 +1,32 @@
-# MDO Lab 4 — Stage 1 & Stage 2 DOE
-# Python 3.12+
-numpy>=2.0
-scipy>=1.13
-pandas>=2.2
-openpyxl>=3.1
-matplotlib>=3.9
-AeroSandbox>=4.2
+# MDO Lab 4 — Unified CCAV Pipeline
+# Python 3.10+
+
+# ── Core ──────────────────────────────────────────────────────
+numpy>=1.24
+scipy>=1.10
+pandas>=2.0
+matplotlib>=3.7
+
+# ── GUI: Dash web explorer ────────────────────────────────────
+dash>=2.14
+dash-bootstrap-components>=1.5
+plotly>=5.18
+
+# ── GUI: PyQt6 desktop (Stage 3 screening monitor) ───────────
+PyQt6>=6.6
+pyqtgraph>=0.13
+
+# ── Stage 3 discipline solvers ───────────────────────────────
+AeroSandbox>=4.2           # fallback aero (AeroBuildup), used when VSPAERO unavailable
+
+# ── Optional: GPU-accelerated PO RCS ─────────────────────────
+# numba>=0.60              # uncomment for GPU Physical-Optics RCS (CUDA)
+
+# ── Optional: OpenVSP Python API ──────────────────────────────
+# openvsp                  # install from NASA OpenVSP wheel or conda-forge
+#                          # provides parametric geometry + VSPAERO
+#                          # set OPENVSP_ROOT env var if installed standalone
+
+# ── External tools (not pip-installable) ──────────────────────
+# VSPAERO  — bundled with OpenVSP (nasa.gov), set OPENVSP_ROOT or add to PATH
+# MYSTRAN  — github.com/MYSTRANsolver/MYSTRAN, set MYSTRAN_PATH or add to PATH
