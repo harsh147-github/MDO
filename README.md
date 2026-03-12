@@ -5,21 +5,91 @@ V-tail, single-engine, stealth-aligned, Mach 0.8–1.5 flight regime.
 
 ![Pipeline Overview](docs/images/pipeline_overview.png)
 
-## Pipeline Overview
+## Current Status
 
 | Stage | Description | Status |
 |-------|-------------|--------|
-| Design Space | 42-variable CCAV CSV (36 independent + 6 derived) | Complete |
-| DOE / Sampling | LHS + 9-constraint physics pre-filter (283/500 feasible) | Complete |
-| Screening | Low-fi aero / structures / RCS batch evaluation | Complete |
-| OpenVSP Geometry | Parametric .vsp3 model (wing, body, V-tail, inlet) | Complete |
-| VSPAERO VLM | Alpha-sweep aerodynamic analysis (CL, CD, L/D, CMy) | Complete |
-| Desktop GUI | PyQt6 live screening monitor with real-time plots | Complete |
-| Web Explorer | 3D Plotly / Dash interactive visualisation | Complete |
+| 1 | Design Space Definition (42 variables, 6 derived) | Complete |
+| 2 | DOE / LHS Sampling + Physics Pre-filter | Complete |
+| 3 | Low-fi Analytical Screening (Aero/Struct/RCS) | Complete |
+| 4 | OpenVSP Parametric Geometry + VSPAERO VLM | Complete |
+| 5 | Mid-fi CFD (OpenFOAM RANS) | Planned |
+| 6 | Structural Analysis (TACS FEM) | Planned |
+| 7 | Coupled Aerostructural Optimisation | Planned |
 
-## DOE Design Space
+## Quick Start
 
-**Source of truth:** `config/ccav_design_space.csv` — 42 variables:
+```bash
+pip install -r requirements.txt
+python explorer_app.py          # opens http://127.0.0.1:5050
+```
+
+---
+
+## Stage 1 — Design Space
+
+34 design variables covering wing geometry, fuselage, propulsion, mass budget,
+stealth signatures, and stability derivatives. 6 additional variables are derived
+via calibrated K-factor formulas (K_BLEND=2.24, K_AR=2.143, K_IXX=0.00455,
+K_FUEL=0.0167). Source of truth: `config/design_space.xlsx`.
+
+https://github.com/user-attachments/assets/efb87553-c95b-4421-93bd-db9dda3e1066
+<img width="3840" height="2160" alt="newplot" src="https://github.com/user-attachments/assets/091975d6-f193-4efc-b75b-6b26beb488c6" />
+
+Key modules:
+- `pipeline/stage1_design_space.py` — bounds, derived formulas, 9 physics validation checks
+- `pipeline/design_vector.py` — DesignVector class wrapping 34-var sample into 63 grouped CAD params
+
+## Stage 2 — DOE & Sampling
+
+![doe_generation](https://github.com/user-attachments/assets/bf819d90-0216-4b7e-849b-c4fad47ccce0)
+
+500 Latin-Hypercube samples (scipy.stats.qmc, optimized), physics pre-filtered
+through 9 constraint checks -> ~283 feasible (56.5% pass rate).
+
+Key modules:
+- `pipeline/stage2_doe.py` — LHS generation + validation
+- `pipeline/visualise_doe.py` — 6 diagnostic PNG plots
+
+## Interactive Explorer
+
+![WhatsApp Image 2026-03-02 at 2 13 47 PM](https://github.com/user-attachments/assets/d2225713-5b81-4cac-8774-80c95e7df1cf)
+
+`explorer_app.py` — local Python HTTP server serving a single-page 3D Plotly app:
+- 3D scatter plot with axis/preset/colour controls
+- Translucent feasible-region cloud (mesh3d convex hull, toggleable)
+- Live-editable spreadsheet tab — cell edits recompute derived vars, re-validate, and update the plot instantly
+- Point inspector with full CAD parameter breakdown
+
+---
+
+## Stage 3 — Analytical Screening
+
+Multi-discipline rapid analysis using analytical solvers:
+
+| Discipline | Method | Key outputs |
+|------------|--------|-------------|
+| **Aero** | Lifting-line + flat-plate drag (wave drag at M > 1) | CL, CD, L/D, Oswald e |
+| **Structures** | Euler-Bernoulli beam (wing box) | σ_max, δ_tip, mass_struct |
+| **Stealth** | Heuristic RCS from alignment + shielding | RCS (dBsm) |
+
+**Objective:** J_norm = 0.4 × (L/D penalty) + 0.3 × (mass penalty) + 0.3 × (RCS penalty)
+
+**Hard constraints:** stress < 450 MPa, RCS < -20 dBsm, L/D > 5.0
+
+---
+
+## Stage 4 — OpenVSP Parametric Geometry + VSPAERO VLM
+
+Each feasible DOE sample is converted into a full OpenVSP 3D model and run through VSPAERO Vortex Lattice Method analysis.
+
+```
+config/ccav_design_space.csv → LHS DOE → ccav_feasible.csv → OpenVSP geometry → VSPAERO VLM → results CSV
+```
+
+### Design Space Definition (42 Variables)
+
+![Design Space Definition](docs/images/design_space_definition.png)
 
 | Category | Count | Examples |
 |----------|-------|---------|
@@ -32,26 +102,33 @@ V-tail, single-engine, stealth-aligned, Mach 0.8–1.5 flight regime.
 | Stealth | 2 | frontal RCS, alignment angle |
 | **Derived** | **6** | taper ratio, wing area (K_BLEND=1.85), AR, inlet area, mass_empty (Raymer), GTOW |
 
-500 Latin-Hypercube samples generated, physics pre-filtered through 9 constraint checks → 283 feasible (56.5% pass rate).
+### Parametric Design Vectors (283 Feasible Samples)
 
-![DOE Design Space](docs/images/doe_design_space.png)
+![Design Vectors Table](docs/images/design_vectors_table.png)
 
-## OpenVSP Parametric Geometry + VSPAERO
+![DOE Design Space Scatter](docs/images/doe_design_space.png)
 
-Each feasible DOE sample is converted into a full OpenVSP 3D model and run through VSPAERO VLM analysis:
-
-```
-ccav_feasible.csv → vsp_geometry.py → .vsp3 model → VSPAERO VLM → aero results CSV
-```
-
-### Components Built per Sample
+### OpenVSP Components Built per Sample
 
 | Component | OpenVSP Type | Parameterisation |
 |-----------|-------------|------------------|
 | Wing | WING | 2-section cranked planform, NACA 4-series, kink at η |
-| Fuselage | FUSELAGE | 7 super-ellipse cross-sections, nose/tail fineness |
+| Fuselage | FUSELAGE | 7 super-ellipse cross-sections (M=N=2.5), nose/tail fineness |
 | V-Tail | WING | Symmetric pair, cant angle = dihedral |
 | Inlet | STACK | 3 elliptical cross-sections, dorsal placement |
+
+### OpenVSP 3D Models — Different DOE Samples
+
+![OpenVSP 3D Models](docs/images/openvsp_3d_models.png)
+
+#### Sample #1
+![OpenVSP Sample 1](docs/images/openvsp_sample_0001.png)
+
+#### Sample #2
+![OpenVSP Sample 2](docs/images/openvsp_sample_0002.png)
+
+#### Sample #4
+![OpenVSP Sample 4](docs/images/openvsp_sample_0004.png)
 
 ### VSPAERO Output Metrics
 
@@ -66,46 +143,13 @@ ccav_feasible.csv → vsp_geometry.py → .vsp3 model → VSPAERO VLM → aero r
 | `vsp_LD_max` | Maximum L/D across alpha sweep |
 | `vsp_CLa_per_deg` | Lift-curve slope (linear region) |
 
-### Results
+### VSPAERO Results
 
 ![VSPAERO Polar Results](docs/images/vspaero_polar_results.png)
 
 ![VSPAERO Batch Comparison](docs/images/vspaero_batch_comparison.png)
 
-## Analytical Screening (Stage 3)
-
-Multi-discipline rapid analysis using analytical solvers:
-
-| Discipline | Method | Key outputs |
-|------------|--------|-------------|
-| **Aero** | Lifting-line + flat-plate drag (wave drag at M > 1) | CL, CD, L/D, Oswald e |
-| **Structures** | Euler-Bernoulli beam (wing box) | σ_max, δ_tip, mass_struct |
-| **Stealth** | Heuristic RCS from alignment + shielding | RCS (dBsm) |
-
-**Objective:** J_norm = 0.4 × (L/D penalty) + 0.3 × (mass penalty) + 0.3 × (RCS penalty)
-
-**Hard constraints:** stress < 450 MPa, RCS < -20 dBsm, L/D > 5.0
-
-## Quick Start
-
-```bash
-pip install -r requirements.txt
-
-# Generate CCAV DOE samples (default 500, seed 42)
-python -m pipeline.ccav_sampler --samples 720 --seed 42
-
-# Run screening (analytical fallback — no external tools needed)
-python -m pipeline.stage3_screening --samples 50 -v
-
-# Launch PyQt6 desktop screening monitor
-python -m pipeline.stage3_gui
-
-# Launch web-based 3D explorer
-python explorer_app.py        # opens http://127.0.0.1:5050
-
-# Run OpenVSP batch (requires OpenVSP 3.48.2 + Python 3.13 venv)
-python pipeline/vsp_batch_runner.py --max-samples 10 --ncpu 4 -v
-```
+---
 
 ## Repository Structure
 
@@ -133,4 +177,22 @@ output/
   vsp_batch/                    # VSPAERO batch results (per-sample dirs + aggregated CSV)
 openvsp_pipeline/               # Standalone bundled copy for GitHub backup
 requirements.txt
+```
+
+## OpenVSP Batch Usage
+
+```bash
+# Requires OpenVSP 3.48.2 + separate Python 3.13 venv (.venv_vsp/)
+
+# Generate DOE samples
+python -m pipeline.ccav_sampler --samples 500 --seed 42
+
+# Run batch (all feasible samples)
+python pipeline/vsp_batch_runner.py --input data/ccav_feasible.csv --output output/vsp_batch
+
+# Quick test (10 samples)
+python pipeline/vsp_batch_runner.py --max-samples 10 --ncpu 4 -v
+
+# Custom alpha sweep
+python pipeline/vsp_batch_runner.py --alpha-start -2 --alpha-end 12 --alpha-npts 8
 ```
